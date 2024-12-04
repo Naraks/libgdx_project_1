@@ -1,6 +1,5 @@
 package ru.denko
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 
@@ -9,7 +8,7 @@ class PlayState(gameStateManager: GameStateManager) : GameState(gameStateManager
     private val hero by lazy { Hero() }
 
     init {
-        Gdx.input.inputProcessor = HeroInputProcessor(hero)
+        gameStateManager.multiplexer.addProcessor(HeroInputProcessor(gameStateManager, hero))
     }
 
     override fun update(dt: Float) {
