@@ -1,30 +1,45 @@
 package ru.denko
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.utils.ScreenUtils
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
 class MenuState(gameStateManager: GameStateManager) : GameState(gameStateManager) {
 
-    private val buttonTexture = Texture(Gdx.files.internal("button.png"))
-    private val buttonBounds = Rectangle(100f, 100f, buttonTexture.width.toFloat(), buttonTexture.height.toFloat())
+    private val stage by lazy { Stage() }
+    private val skin by lazy { Skin(Gdx.files.internal("ui/uiskin.json")) }
+
+    private val startButton by lazy { TextButton("New Game", skin) }
+
+    init {
+        startButton.setPosition(100f, 100f)
+        startButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                println("New Game")
+                gameStateManager.setState(PlayState(gameStateManager))
+            }
+        })
+
+        stage.addActor(startButton)
+        Gdx.input.inputProcessor = stage
+    }
 
     override fun update(dt: Float) {
         // переход в другое состояние
     }
 
     override fun render(batch: SpriteBatch) {
-        ScreenUtils.clear(0f, 0f, 0f, 1f)
-
-        batch.begin()
-        batch.draw(buttonTexture, buttonBounds.x, buttonBounds.y, buttonBounds.width, buttonBounds.height)
-        batch.end()
+        stage.act(Gdx.graphics.deltaTime)
+        stage.draw()
     }
 
     override fun dispose() {
-        buttonTexture.dispose()
+        skin.dispose()
+        stage.dispose()
     }
 
 }
