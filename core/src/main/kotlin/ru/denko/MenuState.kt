@@ -16,49 +16,22 @@ class MenuState(gameStateManager: GameStateManager) : GameState(gameStateManager
     private val stage by lazy { Stage() }
     private val skin by lazy { Skin(Gdx.files.internal("ui/uiskin.json")) }
 
-    private val startButton by lazy { TextButton("New Game", skin) }
-    private val continueButton by lazy { TextButton("Continue", skin) }
-    private val settingsButton by lazy { TextButton("Settings", skin) }
-    private val exitButton by lazy { TextButton("Exit", skin) }
-
     init {
-        startButton.setPosition(100f, 200f)
-        startButton.addListener(object : ClickListener() {
-            override fun clicked(event: InputEvent, x: Float, y: Float) {
-                log.debug("'New Game' clicked")
-                gameStateManager.setState(PlayState(gameStateManager))
-            }
-        })
-        stage.addActor(startButton)
+        startMenuButtons.forEach {
+            val button = TextButton(it.text, skin)
+            button.setPosition(it.x, it.y)
+            button.width = it.width
+            button.height = it.height
+            button.addListener(object : ClickListener() {
+                override fun clicked(event: InputEvent, x: Float, y: Float) {
+                    log.debug("'${it.text}' clicked")
+                    it.func.invoke(gameStateManager)
+                }
+            })
+            stage.addActor(button)
+        }
 
-        continueButton.setPosition(100f, 170f)
-        continueButton.addListener(object : ClickListener() {
-            override fun clicked(event: InputEvent, x: Float, y: Float) {
-                log.debug("'Continue' clicked")
-                //gameStateManager.setState(PlayState(gameStateManager))
-            }
-        })
-        stage.addActor(continueButton)
-
-        settingsButton.setPosition(100f, 140f)
-        settingsButton.addListener(object : ClickListener() {
-            override fun clicked(event: InputEvent, x: Float, y: Float) {
-                log.debug("'Settings' clicked")
-                //gameStateManager.setState(SettingsState(gameStateManager))
-            }
-        })
-        stage.addActor(settingsButton)
-
-        exitButton.setPosition(100f, 110f)
-        exitButton.addListener(object : ClickListener() {
-            override fun clicked(event: InputEvent, x: Float, y: Float) {
-                log.debug("'Exit' clicked")
-                Gdx.app.exit()
-            }
-        })
-        stage.addActor(exitButton)
-
-        Gdx.input.inputProcessor = stage
+        gameStateManager.multiplexer.addProcessor(stage)
     }
 
     override fun update(dt: Float) {
