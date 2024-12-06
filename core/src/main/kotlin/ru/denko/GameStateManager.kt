@@ -1,16 +1,18 @@
 package ru.denko
 
-import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import org.slf4j.LoggerFactory
 
 class GameStateManager(
-    private val batch: SpriteBatch,
-    val multiplexer: InputMultiplexer
-) {
+    override val di: DI
+): DIAware {
     private val log = LoggerFactory.getLogger(javaClass)
+    private val batch by di.instance<SpriteBatch>()
 
-    private var currentState: GameState = MenuState(this)
+    private var currentState: GameState = MenuState(di)
 
     private var previousState: GameState? = null
 
