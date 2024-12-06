@@ -2,14 +2,12 @@ package ru.denko
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
-abstract class GameState(
-    private val gameStateManager: GameStateManager
-) {
+interface GameState {
 
-    abstract fun update(dt: Float)
+    fun update(dt: Float)
 
-    abstract fun render(batch: SpriteBatch)
+    fun render(batch: SpriteBatch)
 
-    abstract fun dispose()
+    fun dispose()
 
 }

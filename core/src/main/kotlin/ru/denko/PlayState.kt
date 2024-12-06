@@ -1,14 +1,20 @@
 package ru.denko
 
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 
-class PlayState(gameStateManager: GameStateManager) : GameState(gameStateManager) {
-
+class PlayState(
+    override val di: DI
+) : GameState, DIAware {
+    private val multiplexer by di.instance<InputMultiplexer>()
     private val hero by lazy { Hero() }
 
     init {
-        gameStateManager.multiplexer.addProcessor(HeroInputProcessor(gameStateManager, hero))
+        multiplexer.addProcessor(HeroInputProcessor(hero, di))
     }
 
     override fun update(dt: Float) {

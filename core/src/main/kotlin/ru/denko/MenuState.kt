@@ -1,16 +1,22 @@
 package ru.denko
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import org.slf4j.LoggerFactory
 
-class MenuState(gameStateManager: GameStateManager) : GameState(gameStateManager) {
-
+class MenuState(
+    override val di: DI
+) : GameState, DIAware {
+    private val multiplexer by di.instance<InputMultiplexer>()
     private val log = LoggerFactory.getLogger(javaClass)
 
     private val stage by lazy { Stage() }
@@ -25,13 +31,13 @@ class MenuState(gameStateManager: GameStateManager) : GameState(gameStateManager
             button.addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
                     log.debug("'${it.text}' clicked")
-                    it.func.invoke(gameStateManager)
+                    it.func.invoke(di)
                 }
             })
             stage.addActor(button)
         }
 
-        gameStateManager.multiplexer.addProcessor(stage)
+        multiplexer.addProcessor(stage)
     }
 
     override fun update(dt: Float) {
