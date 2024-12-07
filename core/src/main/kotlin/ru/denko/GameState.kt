@@ -10,4 +10,8 @@ interface GameState {
 
     fun dispose()
 
+    fun addInputProcessor()
+
+    fun removeInputProcessor()
+
 }

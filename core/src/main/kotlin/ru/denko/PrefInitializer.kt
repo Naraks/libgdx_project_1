@@ -2,23 +2,17 @@ package ru.denko
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import org.kodein.di.DI
+import org.kodein.di.DIAware
 import ru.denko.settings.Settings
 
-class PrefInitializer private constructor() {
-
-    companion object {
-
-        @Volatile
-        private var instance: PrefInitializer? = null
-
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: PrefInitializer().also { instance = it; instance!!.initialize() }
-        }
-    }
+class PrefInitializer(
+    override val di: DI
+) : DIAware {
 
     val settings = HashMap<String, Int>()
 
-    private fun initialize() {
+    init {
         val prefs = Gdx.app.getPreferences("settings")
 
         settings[Settings.MOVE_UP.name] = prefs.getInteger(Settings.MOVE_UP.name, Input.Keys.W)

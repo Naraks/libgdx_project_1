@@ -15,6 +15,7 @@ class GameMain : Game() {
         bindSingleton<InputMultiplexer> { InputMultiplexer() }
         bindSingleton<GameStateManager> { GameStateManager(di) }
         bindSingleton<UiInputProcessor> { UiInputProcessor(di) }
+        bindSingleton<PrefInitializer> { PrefInitializer(di) }
     }
 
     private val batch by di.instance<SpriteBatch>()

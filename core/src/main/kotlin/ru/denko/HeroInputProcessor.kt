@@ -12,8 +12,7 @@ class HeroInputProcessor(
     override val di: DI
 ) : InputAdapter(), DIAware {
     private val gameStateManager by di.instance<GameStateManager>()
-
-    private val prefs by lazy { PrefInitializer.getInstance() }
+    private val prefs by di.instance<PrefInitializer>()
 
     override fun keyDown(keycode: Int): Boolean {
         when (keycode) {

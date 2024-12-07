@@ -12,10 +12,7 @@ class PlayState(
 ) : GameState, DIAware {
     private val multiplexer by di.instance<InputMultiplexer>()
     private val hero by lazy { Hero() }
-
-    init {
-        multiplexer.addProcessor(HeroInputProcessor(hero, di))
-    }
+    private val heroInputProcessor by lazy { HeroInputProcessor(hero, di) }
 
     override fun update(dt: Float) {
 
@@ -34,5 +31,13 @@ class PlayState(
 
     override fun dispose() {
         hero.dispose()
+    }
+
+    override fun addInputProcessor() {
+        multiplexer.addProcessor(heroInputProcessor)
+    }
+
+    override fun removeInputProcessor() {
+        multiplexer.removeProcessor(heroInputProcessor)
     }
 }
